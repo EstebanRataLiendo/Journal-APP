@@ -1,23 +1,57 @@
-import { Google } from "@mui/icons-material"
-import { Button, Grid2, Link, TextField, Typography } from "@mui/material"
+import { useMemo } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { Link as RouterLink  } from "react-router-dom"
+import { Alert, Button, Grid2, Link, TextField, Typography } from "@mui/material"
+import { Google } from "@mui/icons-material"
+
 import { AuthLayout } from "../layout/AuthLayout"
 
+import { useForm } from "../../hooks/useForm"
+import { startGoogleSignIn, startLoginWithEmailPassword } from "../../store/auth/thunks"
 
 export const LoginPage = () => {
+
+  const {status, errorMessage } = useSelector( state => state.auth)
+
+  const dispatch = useDispatch();
+
+  const { email, password, onInputChange } = useForm({
+    email: 'esteban.cba92@gmail.com',
+    password:'123456'
+  })
+
+  const isAuthenticating= useMemo(() => status === 'checking', [status] )
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    console.log(email, password)
+    dispatch( startLoginWithEmailPassword({email, password}) );
+  }
+
+  const onGoogleSignIn = () => {
+    console.log('onGoogleSignIn')
+    dispatch( startGoogleSignIn() );
+
+  }
+
   return(
     <AuthLayout title="Login">
-      <form>
+      <form 
+      className='animate__animated animate__fadeIn animate__faster'
+      
+      onSubmit={onSubmit}>
         <Grid2 container>
           <Grid2 size={{ sm: 12, md: 12, lg: 6 }} sx={{ mt: 2 }}>
             <TextField
               fullWidth
               id="email"
               label="Email"
-              name="email"
               placeholder="correo@google.com"
               type="email"
               variant="outlined"
+              name="email"
+              value={email}
+              onChange={ onInputChange }
             />
             </Grid2>
           <Grid2 size={{ sm: 12, md: 12, lg: 6 }} sx={{ mt: 2 }}>
@@ -29,17 +63,31 @@ export const LoginPage = () => {
               placeholder="password"
               type="password"
               variant="outlined"
+              value={password}
+              onChange={ onInputChange }
             />
           </Grid2>
 
-          <Grid2 container size={12} spacing={2} sx={{ mb: 2, mt: 1 }}>
-            <Grid2 size={{ xs: 12, sm: 12, md: 6 }}>
-              <Button variant="contained" fullWidth>
+          <Grid2 
+            container 
+            display={!!errorMessage ? '':'none'} 
+            sx={{mt:1}} 
+          >
+            <Grid2 xs={12}  >
+              <Alert severity="error"> {errorMessage} </Alert>
+            </Grid2>
+          </Grid2>
+
+
+          <Grid2 container spacing={2} sx={{ mb: 2, mt: 1 }} size={{ sm: 12, md: 12, lg: 12 }}>
+            <Grid2 xs={ 12 } size={{ sm: 6, md: 6, lg: 6 }}>
+              <Button disabled={ isAuthenticating } type="submit" variant="contained" fullWidth>
                 Login
               </Button>
-            </Grid2>
-            <Grid2 size={{ xs: 12, sm: 12, md: 6 }}>
-              <Button variant="contained" fullWidth>
+          </Grid2>
+
+            <Grid2 xs={ 12 } size={{ sm: 6, md: 6, lg: 6 }}>
+              <Button disabled={ isAuthenticating } variant="contained" fullWidth onClick={onGoogleSignIn}>
                 <Google />
                 <Typography sx={{ ml: 1 }}>Google</Typography>
               </Button>

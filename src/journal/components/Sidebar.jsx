@@ -1,11 +1,12 @@
-import { TurnedIn, TurnedInNot } from '@mui/icons-material'
-import { Box, Divider, Drawer, Grid2, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material'
+import { Box, Divider, Drawer, List, Toolbar, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
+import { SideBarItem } from './SideBarItem'
 
 
 export const Sidebar = ({drawerWidth}) => {
 
     const {displayName} = useSelector(state =>state.auth)
+    const {notes} = useSelector(state =>state.journal)
 
   return (
     <Box 
@@ -28,19 +29,8 @@ export const Sidebar = ({drawerWidth}) => {
             <Divider/>
             <List>
                 {
-                    ['Enero', 'Febrero', 'Marzo', 'Abril'].map(text =>(
-                        <ListItem key={text} disablePadding >
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <TurnedInNot/>
-                                </ListItemIcon>
-                                <Grid2 container>
-                                    <ListItemText primary={text} />
-                                    <ListItemText secundary={'El profe usa Grid para el ejercicio, pero esta deprecated. Intente usar Grid2 que es el que sugiere la documentación pero el icono de logout no esta quedando al final de la barra como en el caso del profe'} />
-                                </Grid2>
-                            </ListItemButton>
-
-                        </ListItem>
+                    notes.map(note =>(
+                        <SideBarItem key={note.id} {...note} />
                     ))
                 }
             </List>

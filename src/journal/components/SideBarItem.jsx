@@ -1,8 +1,8 @@
-import { TurnedInNot } from "@mui/icons-material"
-import { Grid2, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
-import { useDispatch } from "react-redux"
-import { setActiveNote } from "../../store/journalStore/journalSlice"
 import { useMemo } from "react"
+import { useDispatch } from "react-redux"
+import { Grid2, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
+import { TurnedInNot } from "@mui/icons-material"
+import { setActiveNote } from "../../store/journalStore/journalSlice"
 
 export const SideBarItem = ({title= '', body, id, date, imageUrls = []}) => {
 
@@ -13,7 +13,7 @@ export const SideBarItem = ({title= '', body, id, date, imageUrls = []}) => {
     }
 
     const newTitle = useMemo (() => {
-        return title.length > 17 ? title.substring(0,17)+ '...' : title;
+        return title.length > 17 ? title.substring(0,10)+ '...' : title;
     }, [title] )
   return (
     <ListItem disablePadding >
@@ -21,9 +21,11 @@ export const SideBarItem = ({title= '', body, id, date, imageUrls = []}) => {
             <ListItemIcon>
                 <TurnedInNot/>
             </ListItemIcon>
-            <Grid2 container>
+            <Grid2 container padding={1}>
                 <ListItemText primary={newTitle} />
-                <ListItemText secundary={ body } />
+            </Grid2>
+            <Grid2>
+                <ListItemText secondary={ body } />
             </Grid2>
         </ListItemButton>
     </ListItem> 
